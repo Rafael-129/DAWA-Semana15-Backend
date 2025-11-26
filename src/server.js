@@ -1,19 +1,16 @@
 const app = require('./app');
-const sequelize = require('./config/database');
+const { syncDatabase } = require('./models');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 
 const startServer = async () => {
   try {
-    await sequelize.authenticate();
-    console.log('Conexión a la base de datos establecida');
-
-    await sequelize.sync({ alter: true });
-    console.log('Modelos sincronizados');
-
+    await syncDatabase();
+    
     app.listen(PORT, () => {
-      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`✓ Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`✓ Ambiente: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error);
